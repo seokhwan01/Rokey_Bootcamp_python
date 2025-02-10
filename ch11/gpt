@@ -1,0 +1,51 @@
+from tkinter import Tk, Label, Checkbutton, Button, BooleanVar, StringVar
+
+# Tkinter 창 생성 및 크기 설정
+oroot = Tk()
+oroot.geometry("400x250")  # 창 크기 조정
+oroot.title("조각 피자 주문 프로그램")
+
+# 라벨 추가
+label = Label(oroot, text="피자")
+label.pack()
+
+# 피자 메뉴 (이름, 가격 저장)
+pizza_menu = {
+    0: ("치즈 피자", 3200),
+    1: ("콤비네이션 피자", 3500),
+    2: ("불고기 피자", 3600)
+}
+
+# 체크박스 변수 저장 딕셔너리
+check_value = {}
+
+# 체크박스 생성 및 배치
+for i in pizza_menu:
+    check_value[i] = BooleanVar()  # 각 체크박스 상태를 저장할 변수
+    check_btn = Checkbutton(oroot, text=f"{pizza_menu[i][0]} ({pizza_menu[i][1]}원)", variable=check_value[i])
+    check_btn.pack(anchor="w")  # 왼쪽 정렬
+
+# 주문 결과 출력 라벨
+order_summary = StringVar()  # 주문내역을 출력할 변수
+order_summary_label = Label(oroot, textvariable=order_summary, justify="left")
+order_summary_label.pack()
+
+# 주문 버튼 클릭 시 선택한 피자 출력 및 총 금액 계산
+def buy():
+    total = 0  # 총 가격 변수
+    order_text = "주문내역:\n"
+
+    for i in check_value:
+        if check_value[i].get():  # 체크된 항목만 출력
+            order_text += f"- {pizza_menu[i][0]} ({pizza_menu[i][1]}원)\n"
+            total += pizza_menu[i][1]  # 총 금액 계산
+
+    order_text += f"\n총 가격: {total}원"
+    order_summary.set(order_text)  # GUI에 주문내역 표시
+
+# "주문" 버튼 생성
+order_button = Button(oroot, text="주문", command=buy)
+order_button.pack()
+
+# Tkinter 실행 루프
+oroot.mainloop()
